@@ -36,7 +36,7 @@
             <label>Клик</label>
             <input type="number" id="click" placeholder="0" oninput="calculate()">
         </div>
-        <div class="row"><span>Касса ойлик:</span> <span id="kassa_oylik">0</span></div>
+        <div class="row"><span>Касса ойлик:</span> <span id="kassa_oylik_display">0</span></div>
 
         <div class="divider"></div>
 
@@ -58,8 +58,8 @@
 
         <div class="divider"></div>
 
-        <div class="row total"><span>Общий касса:</span> <span id="grand_total">0</span></div>
-        <div class="row" style="color: #e67e22; font-weight: bold;"><span>Нахт колди:</span> <span id="naxit_qoldi">0</span></div>
+        <div class="row total"><span>Общий касса:</span> <span id="grand_total_display">0</span></div>
+        <div class="row" style="color: #e67e22; font-weight: bold;"><span>Нахт колди:</span> <span id="naxit_qoldi_display">0</span></div>
     </div>
 
     <button class="send-btn" onclick="sendData()">ОТПРАВИТЬ ОТЧЁТ</button>
@@ -75,15 +75,26 @@
             const extra = Number(document.getElementById('extra').value) || 0;
             const yulkira = 50000;
 
-            const kassaOylik = naxit + click;
-            const grandTotal = kassaOylik + extra;
-            const naxitQoldi = naxit - salary - yulkira;
+            const kassa_oylik = naxit + click;
+            const grand_total = kassa_oylik + extra;
+            const naxit_qoldi = naxit - salary - yulkira;
 
-            document.getElementById('kassa_oylik').innerText = kassaOylik.toLocaleString() + " UZS";
-            document.getElementById('grand_total').innerText = grandTotal.toLocaleString() + " UZS";
-            document.getElementById('naxit_qoldi').innerText = naxitQoldi.toLocaleString() + " UZS";
+            // Обновляем текст на экране
+            document.getElementById('kassa_oylik_display').innerText = kassa_oylik.toLocaleString() + " UZS";
+            document.getElementById('grand_total_display').innerText = grand_total.toLocaleString() + " UZS";
+            document.getElementById('naxit_qoldi_display').innerText = naxit_qoldi.toLocaleString() + " UZS";
 
-            return { naxit, click, salary, extra, yulkira, kassaOylik, grandTotal, naxit_qoldi: naxitQoldi };
+            // Возвращаем объект с правильными ключами для Python
+            return { 
+                naxit: naxit, 
+                click: click, 
+                salary: salary, 
+                extra: extra, 
+                yulkira: yulkira, 
+                kassa_oylik: kassa_oylik, 
+                grand_total: grand_total, 
+                naxit_qoldi: naxit_qoldi 
+            };
         }
 
         function sendData() {
