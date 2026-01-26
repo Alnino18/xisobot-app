@@ -26,19 +26,42 @@
     </style>
 </head>
 <body>
+
     <div class="card">
-        <div class="input-group"><label>Нахт</label><input type="number" id="naxit" placeholder="0" oninput="calculate()"></div>
-        <div class="input-group"><label>Клик</label><input type="number" id="click" placeholder="0" oninput="calculate()"></div>
-        <div class="row"><span>Касса ойлик:</span> <span id="k_oylik_view">0</span></div>
+        <div class="input-group">
+            <label>Нахт</label>
+            <input type="number" id="naxit" placeholder="0" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>Клик</label>
+            <input type="number" id="click" placeholder="0" oninput="calculate()">
+        </div>
+        <div class="row"><span>Касса ойлик:</span> <span id="kassa_oylik">0</span></div>
+
         <div class="divider"></div>
-        <div class="input-group"><label>Зарплата</label><input type="number" id="salary" placeholder="Ёзинг..." oninput="calculate()"></div>
-        <div class="input-group"><label>Йулкира</label><input type="text" value="50 000" readonly></div>
+
+        <div class="input-group">
+            <label>Зарплата</label>
+            <input type="number" id="salary" placeholder="Ёзинг..." oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>Йулкира</label>
+            <input type="text" value="50 000" readonly>
+        </div>
+
         <div class="divider"></div>
-        <div class="input-group"><label>Ойликдан ташкари расход</label><input type="number" id="extra" placeholder="0" oninput="calculate()"></div>
+
+        <div class="input-group">
+            <label>Ойликдан ташкари расход</label>
+            <input type="number" id="extra" placeholder="0" oninput="calculate()">
+        </div>
+
         <div class="divider"></div>
-        <div class="row total"><span>Общий касса:</span> <span id="g_total_view">0</span></div>
-        <div class="row" style="color: #e67e22; font-weight: bold;"><span>Нахт колди:</span> <span id="n_qoldi_view">0</span></div>
+
+        <div class="row total"><span>Общий касса:</span> <span id="grand_total">0</span></div>
+        <div class="row" style="color: #e67e22; font-weight: bold;"><span>Нахт колди:</span> <span id="naxit_qoldi">0</span></div>
     </div>
+
     <button class="send-btn" onclick="sendData()">ОТПРАВИТЬ ОТЧЁТ</button>
 
     <script>
@@ -52,22 +75,32 @@
             const extra = Number(document.getElementById('extra').value) || 0;
             const yulkira = 50000;
 
-            const kassa_oylik = naxit + click;
-            const grand_total = kassa_oylik + extra;
-            const naxit_qoldi = naxit - salary - yulkira;
+            const kassaOylik = naxit + click;
+            const grandTotal = kassaOylik + extra;
+            const naxitQoldi = naxit - salary - yulkira;
 
-            document.getElementById('k_oylik_view').innerText = kassa_oylik.toLocaleString() + " UZS";
-            document.getElementById('g_total_view').innerText = grand_total.toLocaleString() + " UZS";
-            document.getElementById('n_qoldi_view').innerText = naxit_qoldi.toLocaleString() + " UZS";
+            document.getElementById('kassa_oylik').innerText = kassaOylik.toLocaleString() + " UZS";
+            document.getElementById('grand_total').innerText = grandTotal.toLocaleString() + " UZS";
+            document.getElementById('naxit_qoldi').innerText = naxitQoldi.toLocaleString() + " UZS";
 
-            return { naxit, click, salary, extra, yulkira, kassa_oylik, grand_total, naxit_qoldi };
+            return { naxit, click, salary, extra, yulkira, kassaOylik, grandTotal, naxit_qoldi: naxitQoldi };
         }
 
         function sendData() {
-            const res = calculate();
-            const data = { date: new Date().toLocaleDateString('ru-RU'), ...res };
-            tg.sendData(JSON.stringify(data));
-        }
+            const res = calculate(); // Получаем все расчеты
+            const data = {
+                date: new Date().toLocaleDateString('ru-RU'),
+                naxit: res.naxit,
+                click: res.click,
+                salary: res.salary,
+                extra: res.extra,
+                yulkira: res.yulkira,
+                kassa_oylik: res.kassa_oylik,
+                grand_total: res.grand_total,
+                naxit_qoldi: res.naxit_qoldi  // <-- ПРОВЕРЬТЕ ЭТУ СТРОКУ
+        };
+    tg.sendData(JSON.stringify(data));
+}
     </script>
 </body>
 </html>
