@@ -15,23 +15,35 @@
 </head>
 <body>
     <div class="card">
-        <label>Нахт</label>
-        <input type="number" id="naxit" value="0" oninput="calc()">
-        <label>Клик</label>
-        <input type="number" id="click" value="0" oninput="calc()">
-        <label>Зарплата</label>
-        <div class="row">
-        <span>Йўлкира (фиксирован):</span> 
-        <b style="color: #d35400;">50 000 UZS</b>
+        <div class="input-group">
+            <label>Нахт</label>
+            <input type="number" id="naxit" placeholder="0" oninput="calc()">
         </div>
-        <input type="number" id="salary" value="0" oninput="calc()">
-        <label>Расход (ташқари)</label>
-        <input type="number" id="extra" value="0" oninput="calc()">
-        
-        <div style="margin-top:10px; border-top:1px solid #eee; pt:10px;">
-            <div class="res">Касса ойлик: <b id="view_kassa">0</b></div>
+        <div class="input-group">
+            <label>Клик</label>
+            <input type="number" id="click" placeholder="0" oninput="calc()">
+        </div>
+        <div class="res">Касса ойлик: <b id="view_kassa">0</b></div>
+        <div class="divider"></div>
+        <div class="input-group">
+            <label>Зарплата</label>
+            <div class="row">
+            <span>Йўлкира (фиксирован):</span> 
+            <b style="color: #d35400;">50 000 UZS</b>
+            </div>
+        </div>
+        <div class="input-group">
+            <input type="number" id="salary" placeholder="0" oninput="calc()">
+            <label>Расход (Ойликдан ташқари)</label>
+        </div>
+        <div class="input-group">
+            <input type="number" id="extra" placeholder="0" oninput="calc()">
+        </div>
+        <div class="input-group">
+            <div style="margin-top:10px; border-top:1px solid #eee; pt:10px;">
             <div class="res">Общий касса: <b id="view_total">0</b></div>
             <div class="res">Нахт қолди: <b id="view_qoldi">0</b></div>
+            </div>
         </div>
     </div>
     <button class="btn" onclick="send()">ОТПРАВИТЬ ОТЧЁТ</button>
@@ -66,4 +78,5 @@
     </script>
 </body>
 </html>
+
 
