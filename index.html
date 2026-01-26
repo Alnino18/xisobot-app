@@ -3,104 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hisoбот Mini App</title>
+    <title>Hisoбот</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --tg-bg: var(--tg-theme-bg-color, #ffffff);
-            --tg-text: var(--tg-theme-text-color, #222);
-            --tg-hint: var(--tg-theme-hint-color, #999);
-            --tg-btn: var(--tg-theme-button-color, #0088cc);
-            --tg-sec-bg: var(--tg-theme-secondary-bg-color, #f4f4f7);
-        }
-        body { background: var(--tg-sec-bg); color: var(--tg-text); font-family: -apple-system, sans-serif; padding: 15px; margin: 0; }
-        .card { background: var(--tg-bg); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .input-group { margin-bottom: 12px; }
-        label { display: block; font-size: 13px; color: var(--tg-hint); margin-bottom: 4px; font-weight: bold; }
-        input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; background: var(--tg-sec-bg); color: var(--tg-text); font-size: 16px; outline: none; }
-        input[readonly] { opacity: 0.7; border: 1px dashed #ccc; background: var(--tg-bg); }
-        .row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 15px; }
-        .divider { border-top: 1px solid #eee; margin: 10px 0; }
-        .total { color: var(--tg-btn); font-weight: bold; font-size: 18px; }
-        .send-btn { width: 100%; padding: 16px; background: var(--tg-btn); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        body { background: #f4f4f7; font-family: sans-serif; padding: 15px; }
+        .card { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .btn { width: 100%; padding: 15px; background: #0088cc; color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px; }
+        .res { font-size: 14px; color: #555; margin: 5px 0; }
     </style>
 </head>
 <body>
-
     <div class="card">
-        <div class="input-group">
-            <label>Нахт</label>
-            <input type="number" id="naxit" placeholder="0" oninput="calculate()">
+        <label>Нахт</label>
+        <input type="number" id="naxit" value="0" oninput="calc()">
+        <label>Клик</label>
+        <input type="number" id="click" value="0" oninput="calc()">
+        <label>Зарплата</label>
+        <input type="number" id="salary" value="0" oninput="calc()">
+        <label>Расход (ташқари)</label>
+        <input type="number" id="extra" value="0" oninput="calc()">
+        
+        <div style="margin-top:10px; border-top:1px solid #eee; pt:10px;">
+            <div class="res">Касса ойлик: <b id="view_kassa">0</b></div>
+            <div class="res">Общий касса: <b id="view_total">0</b></div>
+            <div class="res">Нахт қолди: <b id="view_qoldi">0</b></div>
         </div>
-        <div class="input-group">
-            <label>Клик</label>
-            <input type="number" id="click" placeholder="0" oninput="calculate()">
-        </div>
-        <div class="row"><span>Касса ойлик:</span> <span id="kassa_oylik">0</span></div>
-
-        <div class="divider"></div>
-
-        <div class="input-group">
-            <label>Зарплата</label>
-            <input type="number" id="salary" placeholder="Ёзинг..." oninput="calculate()">
-        </div>
-        <div class="input-group">
-            <label>Йулкира</label>
-            <input type="text" value="50 000" readonly>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="input-group">
-            <label>Ойликдан ташкари расход</label>
-            <input type="number" id="extra" placeholder="0" oninput="calculate()">
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="row total"><span>Общий касса:</span> <span id="grand_total">0</span></div>
-        <div class="row" style="color: #e67e22; font-weight: bold;"><span>Нахт колди:</span> <span id="naxit_qoldi">0</span></div>
     </div>
-
-    <button class="send-btn" onclick="sendData()">ОТПРАВИТЬ ОТЧЁТ</button>
+    <button class="btn" onclick="send()">ОТПРАВИТЬ ОТЧЁТ</button>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        function calculate() {
-            const naxit = Number(document.getElementById('naxit').value) || 0;
-            const click = Number(document.getElementById('click').value) || 0;
-            const salary = Number(document.getElementById('salary').value) || 0;
-            const extra = Number(document.getElementById('extra').value) || 0;
-            const yulkira = 50000;
+        function calc() {
+            const n = Number(document.getElementById('naxit').value) || 0;
+            const c = Number(document.getElementById('click').value) || 0;
+            const s = Number(document.getElementById('salary').value) || 0;
+            const e = Number(document.getElementById('extra').value) || 0;
+            const y = 50000; // Йўлкира
 
-            const kassaOylik = naxit + click;
-            const grandTotal = kassaOylik + extra;
-            const naxitQoldi = naxit - salary - yulkira;
+            const kassa_oylik = n + c;
+            const grand_total = kassa_oylik + e;
+            const naxit_qoldi = n - s - y;
 
-            document.getElementById('kassa_oylik').innerText = kassaOylik.toLocaleString() + " UZS";
-            document.getElementById('grand_total').innerText = grandTotal.toLocaleString() + " UZS";
-            document.getElementById('naxit_qoldi').innerText = naxitQoldi.toLocaleString() + " UZS";
+            document.getElementById('view_kassa').innerText = kassa_oylik.toLocaleString();
+            document.getElementById('view_total').innerText = grand_total.toLocaleString();
+            document.getElementById('view_qoldi').innerText = naxit_qoldi.toLocaleString();
 
-            return { naxit, click, salary, extra, yulkira, kassaOylik, grandTotal, naxit_qoldi: naxitQoldi };
+            return { naxit:n, click:c, salary:s, extra:e, yulkira:y, kassa_oylik, grand_total, naxit_qoldi };
         }
 
-        function sendData() {
-            const res = calculate(); // Получаем все расчеты
-            const data = {
-                date: new Date().toLocaleDateString('ru-RU'),
-                naxit: res.naxit,
-                click: res.click,
-                salary: res.salary,
-                extra: res.extra,
-                yulkira: res.yulkira,
-                kassa_oylik: res.kassa_oylik,
-                grand_total: res.grand_total,
-                naxit_qoldi: res.naxit_qoldi  // <-- ПРОВЕРЬТЕ ЭТУ СТРОКУ
-        };
-    tg.sendData(JSON.stringify(data));
-}
+        function send() {
+            const data = calc();
+            data.date = new Date().toLocaleDateString('ru-RU');
+            tg.sendData(JSON.stringify(data));
+        }
     </script>
 </body>
 </html>
