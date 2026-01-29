@@ -176,7 +176,7 @@
                 </div>
                 <div class="row">
                     <span>Йўлкира:</span>
-                    <span class="badge">0</span>
+                    <span class="badge">50000</span>
                 </div>
                 <div class="row total-row">
                     <span>Общий касса:</span>
@@ -203,11 +203,11 @@
             const c = Number(document.getElementById('click').value) || 0;
             const s = Number(document.getElementById('salary').value) || 0;
             const e = Number(document.getElementById('extra').value) || 0;
-            const y = 0; 
+            const y = 50000; 
 
             const kassa_oylik = n + c;
             const grand_total = kassa_oylik + e;
-            const naxit_qoldi = n - s;
+            const naxit_qoldi = n - s - y;
 
             // Обновление интерфейса
             document.getElementById('v_kassa').innerText = kassa_oylik.toLocaleString() + " UZS";
@@ -232,5 +232,6 @@
     </script>
 </body>
 </html>
+
 
 
